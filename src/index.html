@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Iamages Web Drop</title>
+    <meta name="description" content="Simple photo upload.">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="assets/css/lib/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/lib/bulma/bulma.min.css">
+    <link rel="stylesheet" href="assets/css/lib/bulma/bulma-switch.min.css">
+    <link rel="stylesheet" href="assets/css/lib/animate.min.css">
+    <link rel="stylesheet" href="assets/css/index.css">
+  </head>
+  <body>
+    <section class="section">
+      <nav class="level is-mobile">
+        <div class="level-left">
+          <div class="level-item">
+            <figure class="image is-48x48">
+              <img src="assets/icons/iamages-icon.png">
+            </figure>
+          </div>
+        </div>
+  
+        <div class="level-right">
+          <div class="level-item">
+            <div class="field has-addons">
+              <div class="control">
+                <div class="file">
+                  <label class="file-label">
+                    <input id="select-images-input" class="file-input iamages-upload-disable" type="file" name="selected-images" accept="image/png, image/jpeg, image/gif, image/bmp" multiple>
+                    <span class="file-cta">
+                      <span class="file-icon">
+                        <i class="fas fa-plus"></i>
+                      </span>
+                      <span class="file-label">
+                        Add image
+                      </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <div class="control">
+                <button id="upload-images-button" class="button is-success iamages-upload-disable">
+                  <span class="icon is-small">
+                    <i class="fas fa-arrow-up"></i>
+                  </span>
+                  <span>Upload</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <progress id="uploading-progress" class="progress is-really-thin is-primary" max="100" value="0"></progress>
+
+      <section id="uploaded-list-container" class="is-hidden">
+        <nav class="level is-mobile">
+          <div class="level-left">
+            <div class="level-item">
+              <h1 class="title">Uploaded images</h1>
+            </div>
+          </div>
+    
+          <div class="level-right">
+            <div class="level-item">
+              <div class="field">
+                <div class="control">
+                  <button id="close-uploaded-list-button" class="button is-link is-rounded iamages-upload-disable">
+                    <span class="icon is-small">
+                      <i class="fas fa-times"></i>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <hr>
+        <div id="uploaded-list"></div>
+        <hr>
+      </section>
+    
+      <section id="preview-list"></section>
+    </section>
+
+    <script src="assets/js/lib/uuidv4.min.js" defer></script>
+    <script src="assets/js/lib/bulma-toast.min.js" defer></script>
+    <script src="assets/js/init.js" defer></script>
+    <script src="assets/js/index.js" defer></script>
+  </body>
+</html>
