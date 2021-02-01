@@ -1,12 +1,10 @@
 {
+  "name": "Iamages Web Drop",
+  "short_name": "Web Drop",
+  "description": "Easily upload your images.",
   "theme_color": "#f1965b",
   "background_color": "#f1965b",
   "display": "standalone",
-  "scope": "/",
-  "start_url": "/",
-  "description": "Easily upload your images.",
-  "short_name": "Web Drop",
-  "app_name": "Iamages Web Drop",
   "icons": [
     {
       "src": "/assets/icons/icon-192x192.png",
