@@ -80,6 +80,27 @@ function addPreviewCard (uuid) {
   imageInformationNSFWCheckboxLabel.innerText = 'NSFW'
   imageInformationNSFWCheckboxControl.appendChild(imageInformationNSFWCheckboxLabel)
 
+  imageInformationField.appendChild(document.createElement('br'))
+
+  let imageInformationExcludeSearchCheckboxControl = document.createElement('div')
+  imageInformationExcludeSearchCheckboxControl.classList.add('control')
+  imageInformationField.appendChild(imageInformationExcludeSearchCheckboxControl)
+
+  let imageInformationExcludeSearchCheckbox = document.createElement('input')
+  imageInformationExcludeSearchCheckbox.type = 'checkbox'
+  imageInformationExcludeSearchCheckbox.autocomplete = 'off'
+  imageInformationExcludeSearchCheckbox.id = 'iamages-isExcludeSearch:' + uuid
+  imageInformationExcludeSearchCheckbox.classList.add('switch', 'is-danger', 'is-rounded', 'iamages-upload-disable')
+  imageInformationExcludeSearchCheckbox.onchange = function (e) {
+    selectedImages[uuid].isExcludeSearch = e.target.checked
+  }
+  imageInformationExcludeSearchCheckboxControl.appendChild(imageInformationExcludeSearchCheckbox)
+
+  let imageInformationExcludeSearchCheckboxLabel = document.createElement('label')
+  imageInformationExcludeSearchCheckboxLabel.htmlFor = 'iamages-isExcludeSearch:' + uuid
+  imageInformationExcludeSearchCheckboxLabel.innerText = 'Exclude from search'
+  imageInformationExcludeSearchCheckboxControl.appendChild(imageInformationExcludeSearchCheckboxLabel)
+
   let cardFooter = document.createElement('footer')
   cardFooter.classList.add('card-footer')
   card.appendChild(cardFooter)
@@ -148,6 +169,7 @@ document.getElementById('select-images-input').onchange = function (e) {
     selectedImages[selectedImageUUID] = {
       description: '',
       isNSFW: false,
+      isExcludeSearch: false,
       file: selectedImage
     }
     addPreviewCard(selectedImageUUID)
@@ -155,7 +177,7 @@ document.getElementById('select-images-input').onchange = function (e) {
 }
 
 document.getElementById('upload-images-button').onclick = function (e) {
-  function logError(error) {
+  function logError (error) {
     console.error(error)
     bulmaToast.toast({
       message: error,
@@ -185,7 +207,8 @@ document.getElementById('upload-images-button').onclick = function (e) {
         body: JSON.stringify({
           FileDescription: selectedImages[uuid].description,
           FileNSFW: selectedImages[uuid].isNSFW,
-          FileData: reader.result.split(',')[1]
+          FileData: reader.result.split(',')[1],
+          FileExcludeSearch: selectedImages[uuid].isExcludeSearch
         })
       }).then(function (response) {
         if (!response.ok) {
