@@ -204,6 +204,7 @@ document.getElementById('upload-images-button').onclick = function (e) {
     reader.onload = function () {
       fetch('https://iamages.uber.space/iamages/api/upload', {
         method: 'PUT',
+        keepalive: true,
         body: JSON.stringify({
           FileDescription: selectedImages[uuid].description,
           FileNSFW: selectedImages[uuid].isNSFW,
