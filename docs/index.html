@@ -12,95 +12,150 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
     <link rel="stylesheet" href="assets/css/lib/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="assets/css/lib/bulma/bulma.min.css">
+    <link rel="stylesheet" href="assets/css/lib/bulma/bulma-divider.min.css">
     <link rel="stylesheet" href="assets/css/lib/bulma/bulma-switch.min.css">
     <link rel="stylesheet" href="assets/css/lib/animate.min.css">
     <link rel="stylesheet" href="assets/css/index.css">
   </head>
   <body>
-    <section class="section">
-      <nav class="level is-mobile">
-        <div class="level-left">
-          <div class="level-item">
-            <figure class="image is-48x48">
-              <img src="assets/icons/iamages-icon.png">
-            </figure>
-          </div>
-        </div>
-  
-        <div class="level-right">
-          <div class="level-item">
-            <div class="field has-addons">
-              <div class="control">
-                <div class="file">
-                  <label class="file-label">
-                    <input id="select-images-input" class="file-input iamages-upload-disable" type="file" name="selected-images" accept="image/png, image/jpeg, image/gif, image/bmp" multiple="multiple">
-                    <span class="file-cta">
-                      <span class="file-icon">
-                        <i class="fas fa-plus"></i>
-                      </span>
-                      <span class="file-label">
-                        Add image
-                      </span>
-                    </span>
-                  </label>
-                </div>
-              </div>
-              <div class="control">
-                <button id="upload-images-button" class="button is-success iamages-upload-disable">
-                  <span class="icon is-small">
-                    <i class="fas fa-arrow-up"></i>
+    <section class="hero is-fullheight">
+      <div class="hero-head">
+        <nav class="navbar">
+          <div class="container">
+            <div class="navbar-brand">
+              <a class="navbar-item" href="https://iamages.github.io/web-drop">
+                <img src="assets/icons/iamages-icon.png" width="28" height="28">
+              </a>
+              <a class="navbar-item" href="https://iamages.github.io/web-drop">
+                Web Drop
+              </a>
+              <a class="navbar-item" href="https://iamages.github.io/web">
+                <span class="icon-text">
+                  <span>Full web experience</span>
+                  <span class="icon">
+                    <i class="fas fa-arrow-right"></i>
                   </span>
-                  <span>Upload</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <progress id="uploading-progress" class="progress is-really-thin is-primary" max="100" value="0"></progress>
-
-      <section id="uploaded-list-container" class="is-hidden">
-        <nav class="level is-mobile">
-          <div class="level-left">
-            <div class="level-item">
-              <h1 class="title">Uploaded images</h1>
-            </div>
-          </div>
-    
-          <div class="level-right">
-            <div class="level-item">
-              <div class="field">
-                <div class="control">
-                  <button id="close-uploaded-list-button" class="button is-link is-rounded iamages-upload-disable">
-                    <span class="icon is-small">
-                      <i class="fas fa-times"></i>
-                    </span>
-                  </button>
-                </div>
-              </div>
+                </span>
+              </a>
             </div>
           </div>
         </nav>
-        <hr>
-        <div id="uploaded-list"></div>
-        <hr>
-      </section>
-    
-      <section id="preview-list"></section>
+      </div>
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <div class="columns is-centered">
+            <div class="column is-half">
+              <div class="file is-large is-boxed is-centered">
+                <label class="file-label">
+                  <input id="upload-file-input" class="file-input" type="file" accept="image/png,image/jpeg,image/gif,image/apng,image/webp,image/bmp">
+                  <span class="file-cta">
+                    <span class="file-icon">
+                      <i class="fas fa-image"></i>
+                    </span>
+                    <span class="file-label">
+                      Select file...
+                    </span>
+                  </span>
+                </label>
+              </div>
+              <div class="divider">OR</div>
+              <div class="field is-grouped is-grouped-centered">
+                <p class="control has-icons-left is-expanded">
+                  <input id="upload-url-input" class="input is-medium" type="url" placeholder="URL to image">
+                  <span class="icon is-medium is-left">
+                    <i class="fas fa-globe"></i>
+                  </span>
+                </p>
+                <p class="control">
+                  <button id="upload-url-next-button" class="button is-medium">
+                    <span class="icon is-medium">
+                      <i class="fas fa-arrow-right"></i>
+                    </span>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-foot">
+        <section class="section">
+          <div class="container has-text-centered content">
+            <p>
+              By using this service, you agree to our <a href="https://iamages.uber.space/iamages/api/v2/private/tos" target="_blank">Terms of Service</a> and 
+              <a href="https://iamages.uber.space/iamages/api/v2/private/privacy" target="_blank">Privacy Policy</a>
+            </p>
+          </div>
+        </section>
+      </div>
     </section>
 
-    <footer class="footer">
-      <div class="content has-text-centered">
-        <p>
-          By using this service, you agree to our <a href="https://iamages.uber.space/iamages/api/private/tos" target="_blank">Terms of Service</a> and 
-          <a href="https://iamages.uber.space/iamages/api/private/privacy" target="_blank">Privacy Policy</a>
-        </p>
+    <div id="upload-modal" class="modal">
+      <div class="modal-background animate__animated"></div>
+      <div class="modal-card animate__animated">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Upload</p>
+          <button id="upload-modal-close-button" class="delete" data-bulma-modal="close"></button>
+        </header>
+        <section class="modal-card-body">
+          <div id="upload-modal-details-page" class="container">
+            <img id="upload-modal-img">
+            <hr>
+            <div class="field">
+              <p class="control is-expanded">
+                <input id="upload-modal-description-input" class="input" type="text" placeholder="No description yet.">
+              </p>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-body">
+                <div class="field">
+                  <input id="upload-modal-nsfw-toggle" name="upload-modal-nsfw-toggle" type="checkbox" class="switch is-rounded is-danger">
+                  <label for="upload-modal-nsfw-toggle">NSFW</label>
+                </div>
+                <div class="field">
+                  <input id="upload-modal-hidden-toggle" name="upload-modal-hidden-toggle" type="checkbox" class="switch is-rounded is-danger">
+                  <label for="upload-modal-hidden-toggle">Hidden (from public)</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="upload-modal-complete-page" class="container has-text-centered is-hidden">
+            <span class="icon is-large">
+              <i class="fas fa-check-circle fa-2x"></i>
+            </span>
+            <h1 class="title is-4">Upload complete</h1>
+            <hr>
+            <div class="buttons is-centered">
+              <button id="upload-modal-share-button" class="button is-rounded is-medium">
+                <span class="icon is-medium">
+                  <i class="fas fa-share"></i>
+                </span>
+                <span>Share link</span>
+              </button>
+              <button id="upload-modal-copy-button" class="button is-rounded is-medium">
+                <span class="icon is-medium">
+                  <i class="fas fa-copy"></i>
+                </span>
+                <span>Copy link</span>
+              </button>
+              <a id="upload-modal-go-button" class="button is-rounded is-medium" target="_blank">
+                <span class="icon is-medium">
+                  <i class="fas fa-arrow-right"></i>
+                </span>
+                <span>Go to link</span>
+              </a>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button id="upload-modal-upload-button" class="button is-primary">Upload</button>
+        </footer>
       </div>
-    </footer>
+    </div>
 
-    <script src="assets/js/lib/uuidv4.min.js" defer="defer"></script>
-    <script src="assets/js/lib/bulma-toast.min.js" defer="defer"></script>
+    <script src="assets/js/lib/bulma/bulma-toast.min.js" defer="defer"></script>
+    <script src="assets/js/lib/bulma/bulma-modal.js" defer="defer"></script>
+    <script src="assets/js/lib/iamages.js" defer="defer"></script>
     <script src="assets/js/init.js" defer="defer"></script>
     <script src="assets/js/index.js" defer="defer"></script>
   </body>

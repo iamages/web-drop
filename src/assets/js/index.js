@@ -1,246 +1,131 @@
 'use strict'
 
-let selectedImages = {}
-const previewListElement = document.getElementById('preview-list')
-const uploadedList = {
-  container: document.getElementById('uploaded-list-container'),
-  list: document.getElementById('uploaded-list'),
-  closeButton: document.getElementById('close-uploaded-list-button')
-}
-const uploadingProgressElement = document.getElementById('uploading-progress')
-let isUploading = false
-
-function addPreviewCard (uuid) {
-  let card = document.createElement('div')
-  card.classList.add('card')
-  card.id = 'selectedImage:' + uuid
-  previewListElement.appendChild(card)
-
-  let cardHeader = document.createElement('header')
-  cardHeader.classList.add('card-header')
-  card.appendChild(cardHeader)
-
-  let cardHeaderTitle = document.createElement('p')
-  cardHeaderTitle.classList.add('card-header-title')
-  cardHeaderTitle.innerText = selectedImages[uuid].file.name
-  cardHeader.appendChild(cardHeaderTitle)
-
-  let cardImage = document.createElement('div')
-  cardImage.classList.add('card-image')
-  card.appendChild(cardImage)
-
-  let cardImageFigure = document.createElement('figure')
-  cardImageFigure.classList.add('image')
-  cardImage.appendChild(cardImageFigure)
-
-  let cardImageFigureImage = document.createElement('img')
-  cardImageFigureImage.src = URL.createObjectURL(selectedImages[uuid].file)
-  cardImageFigure.appendChild(cardImageFigureImage)
-
-  let cardContent = document.createElement('div')
-  cardContent.classList.add('card-content')
-  card.appendChild(cardContent)
-
-  let imageInformationField = document.createElement('div')
-  imageInformationField.classList.add('field')
-  cardContent.appendChild(imageInformationField)
-
-  let imageInformationDescriptionInputControl = document.createElement('div')
-  imageInformationDescriptionInputControl.classList.add('control', 'is-expanded')
-  imageInformationField.appendChild(imageInformationDescriptionInputControl)
-
-  let imageInformationDescriptionInput = document.createElement('input')
-  imageInformationDescriptionInput.type = 'text'
-  imageInformationDescriptionInput.id = 'iamages-description:' + uuid
-  imageInformationDescriptionInput.classList.add('input', 'iamages-upload-disable')
-  imageInformationDescriptionInput.placeholder = "No description yet."
-  imageInformationDescriptionInput.onchange = function (e) {
-    selectedImages[uuid].description = e.target.value
-  }
-  imageInformationDescriptionInputControl.appendChild(imageInformationDescriptionInput)
-
-  imageInformationField.appendChild(document.createElement('br'))
-
-  let imageInformationNSFWCheckboxControl = document.createElement('div')
-  imageInformationNSFWCheckboxControl.classList.add('control')
-  imageInformationField.appendChild(imageInformationNSFWCheckboxControl)
-
-  let imageInformationNSFWCheckbox = document.createElement('input')
-  imageInformationNSFWCheckbox.type = 'checkbox'
-  imageInformationNSFWCheckbox.autocomplete = 'off'
-  imageInformationNSFWCheckbox.id = 'iamages-isNSFW:' + uuid
-  imageInformationNSFWCheckbox.classList.add('switch', 'is-danger', 'is-rounded', 'iamages-upload-disable')
-  imageInformationNSFWCheckbox.onchange = function (e) {
-    selectedImages[uuid].isNSFW = e.target.checked
-  }
-  imageInformationNSFWCheckboxControl.appendChild(imageInformationNSFWCheckbox)
-
-  let imageInformationNSFWCheckboxLabel = document.createElement('label')
-  imageInformationNSFWCheckboxLabel.htmlFor = 'iamages-isNSFW:' + uuid
-  imageInformationNSFWCheckboxLabel.innerText = 'NSFW'
-  imageInformationNSFWCheckboxControl.appendChild(imageInformationNSFWCheckboxLabel)
-
-  imageInformationField.appendChild(document.createElement('br'))
-
-  let imageInformationExcludeSearchCheckboxControl = document.createElement('div')
-  imageInformationExcludeSearchCheckboxControl.classList.add('control')
-  imageInformationField.appendChild(imageInformationExcludeSearchCheckboxControl)
-
-  let imageInformationExcludeSearchCheckbox = document.createElement('input')
-  imageInformationExcludeSearchCheckbox.type = 'checkbox'
-  imageInformationExcludeSearchCheckbox.autocomplete = 'off'
-  imageInformationExcludeSearchCheckbox.id = 'iamages-isExcludeSearch:' + uuid
-  imageInformationExcludeSearchCheckbox.classList.add('switch', 'is-danger', 'is-rounded', 'iamages-upload-disable')
-  imageInformationExcludeSearchCheckbox.onchange = function (e) {
-    selectedImages[uuid].isExcludeSearch = e.target.checked
-  }
-  imageInformationExcludeSearchCheckboxControl.appendChild(imageInformationExcludeSearchCheckbox)
-
-  let imageInformationExcludeSearchCheckboxLabel = document.createElement('label')
-  imageInformationExcludeSearchCheckboxLabel.htmlFor = 'iamages-isExcludeSearch:' + uuid
-  imageInformationExcludeSearchCheckboxLabel.innerText = 'Exclude from search'
-  imageInformationExcludeSearchCheckboxControl.appendChild(imageInformationExcludeSearchCheckboxLabel)
-
-  let cardFooter = document.createElement('footer')
-  cardFooter.classList.add('card-footer')
-  card.appendChild(cardFooter)
-
-  let cardFooterItemDelete = document.createElement('a')
-  cardFooterItemDelete.classList.add('card-footer-item', 'is-unselectable')
-  cardFooterItemDelete.innerText = 'Remove from queue'
-  cardFooterItemDelete.onclick = function () {
-    removePreviewCard(uuid)
-  }
-  cardFooter.appendChild(cardFooterItemDelete)
-
-  previewListElement.append(document.createElement('br'))
+var selectedFile = {
+  type: null,
+  file: null
 }
 
-function removePreviewCard (uuid) {
-  if (!isUploading) {
-    delete selectedImages[uuid]
-    document.getElementById('selectedImage:' + uuid).remove()
-  }
-}
-
-function addUploadedCard (id, description) {
-  let card = document.createElement('div')
-  card.classList.add('card')
-  uploadedList.list.appendChild(card)
-
-  let cardHeader = document.createElement('header')
-  cardHeader.classList.add('card-header')
-  card.appendChild(cardHeader)
-
-  let cardHeaderTitle = document.createElement('p')
-  cardHeaderTitle.classList.add('card-header-title')
-  cardHeaderTitle.innerText = description
-  cardHeader.appendChild(cardHeaderTitle)
-
-  let cardImage = document.createElement('div')
-  cardImage.classList.add('card-image')
-  card.appendChild(cardImage)
-
-  let cardImageFigure = document.createElement('figure')
-  cardImageFigure.classList.add('image')
-  cardImage.appendChild(cardImageFigure)
-
-  let cardImageFigureImage = document.createElement('img')
-  cardImageFigureImage.src = 'https://iamages.uber.space/iamages/api/thumb/' + id
-  cardImageFigure.appendChild(cardImageFigureImage)
-
-  let cardFooter = document.createElement('footer')
-  cardFooter.classList.add('card-footer')
-  card.appendChild(cardFooter)
-
-  let cardFooterItemEmbedLink = document.createElement('a')
-  cardFooterItemEmbedLink.classList.add('card-footer-item', 'is-unselectable')
-  cardFooterItemEmbedLink.innerText = 'Link to embed'
-  cardFooterItemEmbedLink.target = '_blank'
-  cardFooterItemEmbedLink.href = 'https://iamages.uber.space/iamages/api/embed/' + id
-  cardFooter.appendChild(cardFooterItemEmbedLink)
-
-  uploadedList.list.appendChild(document.createElement('br'))
-}
-
-document.getElementById('select-images-input').onchange = function (e) {
-  for (const selectedImage of e.target.files) {
-    const selectedImageUUID = uuidv4()
-    selectedImages[selectedImageUUID] = {
-      description: '',
-      isNSFW: false,
-      isExcludeSearch: false,
-      file: selectedImage
+const uploadModal = {
+  controller: new BulmaModal("#upload-modal"),
+  head: {
+    closeButton: document.getElementById("upload-modal-close-button")
+  },
+  detailsPage: {
+    page: document.getElementById("upload-modal-details-page"),
+    body: {
+      img: document.getElementById("upload-modal-img"),
+      descriptionInput: document.getElementById("upload-modal-description-input"),
+      nsfwToggle: document.getElementById("upload-modal-nsfw-toggle"),
+      hiddenToggle: document.getElementById("upload-modal-hidden-toggle")
     }
-    addPreviewCard(selectedImageUUID)
+  },
+  completePage: {
+    page: document.getElementById("upload-modal-complete-page"),
+    body: {
+      shareButton: document.getElementById("upload-modal-share-button"),
+      copyButton: document.getElementById("upload-modal-copy-button"),
+      goButton: document.getElementById("upload-modal-go-button")
+    }
+  },
+  foot: {
+    uploadButton: document.getElementById("upload-modal-upload-button")
   }
 }
 
-document.getElementById('upload-images-button').onclick = function (e) {
-  function logError (error) {
-    console.error(error)
+uploadModal.controller.addEventListener("modal:close", () => {
+  uploadModal.detailsPage.page.classList.remove("is-hidden")
+  uploadModal.completePage.page.classList.add("is-hidden")
+
+  uploadModal.detailsPage.body.img.src = ""
+  uploadModal.detailsPage.body.descriptionInput.value = ""
+  uploadModal.detailsPage.body.nsfwToggle.value = false
+  uploadModal.detailsPage.body.hiddenToggle.value = false
+
+  uploadModal.foot.uploadButton.classList.remove("is-loading")
+  uploadModal.foot.uploadButton.classList.remove("is-hidden")
+})
+
+uploadModal.completePage.body.shareButton.onclick = async (e) => {
+  await navigator.share({ url: e.target.getAttribute("data-iamages-url") })
+}
+
+uploadModal.completePage.body.copyButton.onclick = async (e) => {
+  await navigator.clipboard.writeText(uploadModal.completePage.body.copyButton.getAttribute("data-iamages-url"))
+}
+
+async function upload() {
+  uploadModal.head.closeButton.classList.add("is-hidden")
+  uploadModal.foot.uploadButton.classList.add("is-loading")
+
+  var obj = {
+    description: "No description yet.",
+    nsfw: uploadModal.detailsPage.body.nsfwToggle.checked,
+    hidden: uploadModal.detailsPage.body.hiddenToggle.checked
+  }
+  if (uploadModal.detailsPage.body.descriptionInput.value !== "") {
+    obj["description"] = uploadModal.detailsPage.body.descriptionInput.value
+  }
+  var fileInformation = {
+    id: "unknown"
+  }
+  try {
+    switch (selectedFile.type) {
+      case "file":
+        obj["upload_file"] = selectedFile.file
+        fileInformation = await is.upload(obj)
+        break
+      case "url":
+        obj["upload_url"] = selectedFile.file
+        fileInformation = await is.websave(obj)
+        break
+    }
+  } catch (err) {
     bulmaToast.toast({
-      message: error,
-      type: 'is-danger'
+      type: "is-danger",
+      message: ""
     })
   }
+  const shareURL = `${is.apiRoot}/file/${fileInformation.id}/embed`
+  uploadModal.completePage.body.shareButton.setAttribute("data-iamages-url", shareURL)
+  uploadModal.completePage.body.copyButton.setAttribute("data-iamages-url", shareURL)
+  uploadModal.completePage.body.goButton.href = shareURL
 
-  isUploading = true
+  uploadModal.foot.uploadButton.classList.remove("is-loading")
+  uploadModal.foot.uploadButton.classList.add("is-hidden")
+  uploadModal.head.closeButton.classList.remove("is-hidden")
 
-  for (let disableElement of document.getElementsByClassName('iamages-upload-disable')) {
-    disableElement.disabled = true
-  }
-
-  uploadedList.list.innerHTML = ''
-  uploadedList.container.classList.remove('is-hidden')
-
-  const selectedImagesKeys = Object.keys(selectedImages)
-  let selectedImagesCurrentPosition = 0
-
-  for (const uuid of selectedImagesKeys) {
-    selectedImagesCurrentPosition++
-    const reader = new FileReader()
-    reader.readAsDataURL(selectedImages[uuid].file)
-    reader.onload = function () {
-      fetch('https://iamages.uber.space/iamages/api/upload', {
-        method: 'PUT',
-        keepalive: true,
-        body: JSON.stringify({
-          FileDescription: selectedImages[uuid].description,
-          FileNSFW: selectedImages[uuid].isNSFW,
-          FileData: reader.result.split(',')[1],
-          FileExcludeSearch: selectedImages[uuid].isExcludeSearch
-        })
-      }).then(function (response) {
-        if (!response.ok) {
-          throw new Error('Network response was not OK!')
-        }
-        return response.json()
-      }).then(function (parsed) {
-        const backupDescription = selectedImages[uuid].description
-        removePreviewCard(uuid)
-        addUploadedCard(parsed.FileID, backupDescription)
-      }).catch(function (error) {
-        logError(error)
-      })
-    }
-    reader.onerror = function (error) {
-      logError(error)
-    }
-    uploadingProgressElement.value = (selectedImagesCurrentPosition / selectedImagesKeys.length) * 100
-  }
-
-  setTimeout(function () {
-    uploadingProgressElement.value = 0
-  }, 3000)
-
-  for (let disableElement of document.getElementsByClassName('iamages-upload-disable')) {
-    disableElement.disabled = false
-  }
-
-  isUploading = false
+  uploadModal.detailsPage.page.classList.add("is-hidden")
+  uploadModal.completePage.page.classList.remove("is-hidden")
 }
 
-uploadedList.closeButton.onclick = function () {
-  uploadedList.container.classList.add('is-hidden')
+uploadModal.foot.uploadButton.onclick = upload
+
+document.getElementById("upload-file-input").onchange = (e) => {
+  selectedFile.type = "file"
+  selectedFile.file = e.target.files[0]
+  const url = URL.createObjectURL(selectedFile.file)
+  uploadModal.detailsPage.body.img.src = url
+  uploadModal.detailsPage.body.img.alt = url
+  uploadModal.controller.show()
 }
+
+function showUploadModalUsingUrl() {
+  const url = document.getElementById("upload-url-input").value
+  if (url == "") return
+  uploadModal.detailsPage.body.img.src = url
+  uploadModal.detailsPage.body.img.alt = url
+  selectedFile.type = "url"
+  selectedFile.file = url
+  uploadModal.controller.show()
+}
+
+document.getElementById("upload-url-next-button").onclick = showUploadModalUsingUrl
+document.getElementById("upload-url-input").onkeyup = (e) => {
+  switch (e.key) {
+    case "Enter":
+      showUploadModalUsingUrl()
+      break
+  }
+}
+
+if (!navigator.share) uploadModal.completePage.body.shareButton.classList.add("is-hidden")
