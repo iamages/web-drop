@@ -1,1 +1,1 @@
-"use strict";bulmaToast.setDefaults({position:"bottom-center",closeOnClick:!0,pauseOnHover:!0,animate:{in:"bounceInUp",out:"bounceOutDown"}});const apiRoot="http://localhost:9999/iamages/api/v3";
+"use strict";bulmaToast.setDefaults({position:"bottom-center",closeOnClick:!0,pauseOnHover:!0,animate:{in:"bounceInUp",out:"bounceOutDown"}});const apiRoot="https://iamages.uber.space/iamages/api/v3";
