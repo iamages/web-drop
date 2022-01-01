@@ -65,27 +65,40 @@ async function upload() {
   if (uploadModal.detailsPage.body.descriptionInput.value !== "") {
     obj["description"] = uploadModal.detailsPage.body.descriptionInput.value
   }
+
   var fileInformation = {
     id: "unknown"
   }
+
   try {
     switch (selectedFile.type) {
       case "file":
-        obj["upload_file"] = selectedFile.file
-        fileInformation = await is.upload(obj)
+        var form = new FormData()
+        form.set("info", JSON.stringify(obj))
+        form.set("upload_file", selectedFile.file)
+        var response = await fetch(apiRoot + "/file/new/upload", {
+          method: "POST",
+          body: form
+        })
+        fileInformation = await response.json()
         break
       case "url":
         obj["upload_url"] = selectedFile.file
-        fileInformation = await is.websave(obj)
+        var response = await fetch(apiRoot + "/file/new/websave", {
+          method: "POST",
+          body: JSON.stringify(obj)
+        })
+        fileInformation = await response.json()
         break
     }
   } catch (err) {
+    console.error(err)
     bulmaToast.toast({
       type: "is-danger",
-      message: ""
+      message: err
     })
   }
-  const shareURL = `${is.apiRoot}/file/${fileInformation.id}/embed`
+  const shareURL = `${apiRoot}/file/${fileInformation.id}/embed`
   uploadModal.completePage.body.shareButton.setAttribute("data-iamages-url", shareURL)
   uploadModal.completePage.body.copyButton.setAttribute("data-iamages-url", shareURL)
   uploadModal.completePage.body.goButton.href = shareURL
